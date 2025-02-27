@@ -23,6 +23,7 @@ export default async function handler(
     .update(linksTable)
     .set({ ...payload, updated_at: sql`NOW()` })
     .where(eq(linksTable.id, Number(req.query.id)))
+    .returning({ updatedId: linksTable.id })
 
   res.status(200).json({ data })
 }

@@ -20,7 +20,7 @@ export default function FormContainer({
 }: {
   id?: number
   values?: formType
-  onFinished?: (success: boolean) => void
+  onFinished?: () => void
 }) {
   const [loading, setLoading] = useState<boolean>(false)
   const { form } = useFormAction({ values })
@@ -44,10 +44,9 @@ export default function FormContainer({
         method: mapping[type].method,
         body: JSON.stringify(values),
       })
-      onFinished?.(true)
     } catch (error) {
     } finally {
-      onFinished?.(true)
+      onFinished?.()
       if (!id) form.reset()
       setLoading(false)
     }
