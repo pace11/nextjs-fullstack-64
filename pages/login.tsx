@@ -6,13 +6,23 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { signIn, useSession } from 'next-auth/react'
+import { signIn } from 'next-auth/react'
 import { getToken } from 'next-auth/jwt'
+import { GetServerSidePropsContext, GetServerSideProps } from 'next'
+// import { useEffect } from 'react'
+// import { useRouter } from 'next/router'
 
 export default function Login() {
-  const session = useSession()
+  // const router = useRouter()
+  // const session = useSession()
 
-  console.log('data => ', session)
+  // salah satu opsi, tapi bukan yang utama
+  // useEffect(() => {
+  //   if (session) {
+  //     router.push('/')
+  //   }
+  // }, [])
+
   return (
     <div className="container mx-auto">
       <Card>
@@ -30,20 +40,22 @@ export default function Login() {
   )
 }
 
-export const getServerSideProps = async (context: any) => {
-  const token = await getToken({
-    req: context.req,
-    secret: process.env.NEXTAUTH_SECRET,
-  })
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext,
+// ) => {
+//   const token = await getToken({
+//     req: context.req,
+//     secret: process.env.NEXTAUTH_SECRET,
+//   })
 
-  if (token) {
-    return {
-      redirect: {
-        destination: '/',
-        permanent: false,
-      },
-    }
-  }
+//   if (token) {
+//     return {
+//       redirect: {
+//         destination: '/',
+//         permanent: false,
+//       },
+//     }
+//   }
 
-  return { props: {} }
-}
+//   return { props: {} }
+// }

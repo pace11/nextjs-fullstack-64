@@ -3,8 +3,6 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
 import { linksTable } from '@/lib/db/schema'
 import { isNull, desc, and, eq } from 'drizzle-orm'
-import { withAuth } from '@/lib/middleware'
-import { JWT } from 'next-auth/jwt'
 
 type Response = {
   id: number
@@ -15,17 +13,16 @@ type Response = {
   deleted_at: Date | null
 }
 
-async function handler(
+export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ data: Response[] }>,
-  session?: JWT | null,
 ) {
   const data = await db
     .select()
     .from(linksTable)
     .where(
       and(
-        eq(linksTable.email, String(session?.email)),
+        eq(linksTable.email, String(req.query.email)),
         isNull(linksTable.deleted_at),
       ),
     )
@@ -33,5 +30,3 @@ async function handler(
 
   res.status(200).json({ data })
 }
-
-export default withAuth(handler)

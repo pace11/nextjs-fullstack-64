@@ -17,12 +17,15 @@ import FormContainer from '@/container/FormContainer'
 import { useState, useRef } from 'react'
 import { getToken } from 'next-auth/jwt'
 import { useSession, signOut } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
+import { GetServerSideProps, GetServerSidePropsContext } from 'next'
 
 import useSWR from 'swr'
 
 const fetcher = (...args) => fetch(...args).then((res) => res.json())
 
 export default function Home() {
+  const router = useRouter()
   const session = useSession()
   const popoverRef = useRef<HTMLButtonElement | null>(null)
   const [showCreate, setShowCreate] = useState<boolean>(false)
@@ -56,6 +59,14 @@ export default function Home() {
         <div className="container">
           <h1 className="text-xl font-bold">{`Hello, ${session.data?.user?.email} 👋`}</h1>
           <p>This is a an area to create your links, so lets put here !!</p>
+          <Button
+            size="sm"
+            onClick={() =>
+              router.push(`/my-links/${session.data?.user?.email}`)
+            }
+          >
+            Go to landing page
+          </Button>
           <Button variant="link" size="sm" onClick={() => signOut()}>
             Signout
           </Button>
@@ -142,20 +153,22 @@ export default function Home() {
   )
 }
 
-export const getServerSideProps = async (context: any) => {
-  const token = await getToken({
-    req: context.req,
-    secret: process.env.NEXTAUTH_SECRET,
-  })
+// export const getServerSideProps: GetServerSideProps = async (
+//   context: GetServerSidePropsContext,
+// ) => {
+//   const token = await getToken({
+//     req: context.req,
+//     secret: process.env.NEXTAUTH_SECRET,
+//   })
 
-  if (!token) {
-    return {
-      redirect: {
-        destination: '/login',
-        permanent: false,
-      },
-    }
-  }
+//   if (!token) {
+//     return {
+//       redirect: {
+//         destination: '/login',
+//         permanent: false,
+//       },
+//     }
+//   }
 
-  return { props: {} }
-}
+//   return { props: {} }
+// }

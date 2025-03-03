@@ -2,22 +2,22 @@
 import type { NextApiRequest, NextApiResponse } from 'next'
 import { db } from '@/lib/db'
 import { linksTable } from '@/lib/db/schema'
-import { getToken } from 'next-auth/jwt'
+import { JWT } from 'next-auth/jwt'
+import { withAuth } from '@/lib/middleware'
 
 type Response = {
   insertedId?: number
   message?: string
 }
 
-export default async function handler(
+async function handler(
   req: NextApiRequest,
   res: NextApiResponse<{ data: Response[] }>,
+  session?: JWT | null,
 ) {
   if (req.method !== 'POST') {
     res.status(405).json({ data: [{ message: 'Method not allowed' }] })
   }
-
-  const session = await getToken({ req, secret: process.env.NEXTAUTH_SECRET })
 
   const payload = JSON.parse(req.body)
 
@@ -28,3 +28,5 @@ export default async function handler(
 
   res.status(200).json({ data })
 }
+
+export default withAuth(handler)

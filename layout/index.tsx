@@ -1,5 +1,6 @@
 import Head from 'next/head'
 import { ReactNode } from 'react'
+import Link from 'next/link'
 
 export default function Layout({ children }: { children: ReactNode }) {
   return (
@@ -13,7 +14,9 @@ export default function Layout({ children }: { children: ReactNode }) {
       <div className="min-h-screen bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-white">
         <header className="w-full bg-white dark:bg-gray-800 shadow-md p-4">
           <div className="container mx-auto flex justify-between items-center">
-            <h1 className="text-xl font-bold">ShareLink</h1>
+            <Link href="/" className="text-xl font-bold">
+              ShareLink
+            </Link>
           </div>
         </header>
         <main className="container mx-auto p-4">{children}</main>
